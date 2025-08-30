@@ -51,7 +51,7 @@ export default function MayorPage() {
     <main className="min-h-dvh bg-[#0b1120] text-slate-100">
       <header className="border-b border-cyan-500/20">
         <div className="mx-auto max-w-4xl px-4 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold">Mayor AI-2070</h1>
+          <h1 className="text-lg font-semibold">Mayor AI</h1>
           <Button variant="secondary" className="bg-slate-800 hover:bg-slate-700" asChild>
             <Link href="/dashboard">Back to Dashboard</Link>
           </Button>
