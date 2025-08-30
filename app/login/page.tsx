@@ -17,7 +17,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     const citizen = typeof window !== "undefined" ? window.localStorage.getItem("citizen") : null
-    if (citizen) router.replace("/dashboard")
+    if (citizen) router.replace("/home")
   }, [router])
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -31,7 +31,7 @@ export default function LoginPage() {
       }
       const citizen = { email, name: email.split("@")[0] || "Citizen" }
       window.localStorage.setItem("citizen", JSON.stringify(citizen))
-      router.push("/dashboard")
+      router.push("/home")
     } catch {
       setError("Unable to sign in.")
     } finally {

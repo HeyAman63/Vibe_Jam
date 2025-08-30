@@ -1,30 +1,74 @@
-import React, { useState } from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import { ChevronRight, MessageSquare, Users, Zap, Shield, Clock, Send, Star, MapPin, Bot } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+
+type Message = { role: "user" | "mayor"; content: string }
 
 function App() {
-  const [issue, setIssue] = useState('');
+  const router  = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [response, setResponse] = useState('');
+  const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([
+        {
+          role: "mayor",
+          content: "I am Mayor AI-2070. I manage energy, water, and transport with fairness and logic. How may I assist?",
+        },
+      ])
 
-  const handleSubmitIssue = async (e) => {
-    e.preventDefault();
-    if (!issue.trim()) return;
+
+    const send = async(e:any)=> {
+        e.preventDefault();
     
     setIsSubmitting(true);
     
-    // Simulate AI response with realistic delay
-    setTimeout(() => {
-      const responses = [
-        "Thank you for bringing this to my attention. I've reviewed the infrastructure data and will coordinate with the public works department to address the pothole on Main Street within 48 hours. I've also allocated emergency funds for temporary road safety measures.",
-        "I understand your concern about the park lighting. I've already initiated a safety audit and will have LED lighting installed by next week. In the meantime, I've increased patrol frequency in that area.",
-        "Your waste management suggestion is excellent. I'm implementing a new smart collection schedule that will optimize routes and reduce missed pickups by 75%. The pilot program starts this Monday.",
-        "I've analyzed traffic patterns and agree this intersection needs attention. I'm fast-tracking the installation of smart traffic signals and pedestrian safety features. Construction begins next month."
-      ];
+    const router = useRouter()
+      useEffect(() => {
+        const citizen = window.localStorage.getItem("citizen")
+        if (!citizen) router.replace("/login")
+      }, [router])
+    
+        const userMsg: Message = { role: "user", content: input.trim() }
+        setMessages((m) => [...m, userMsg])
+        setInput("")
+        setLoading(true)
+        setIsSubmitting(true)
+        try {
+          const res = await fetch("/api/mayor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: userMsg.content }),
+          })
+          const data = (await res.json()) as { mayorReply?: string; error?: string }
+          const reply: Message = { role: "mayor", content: data.mayorReply ?? data.error ?? "No response." }
+          setMessages((m) => [...m, reply])
+        } catch {
+          setMessages((m) => [...m, { role: "mayor", content: "System error." }])
+          setIsSubmitting(false);
+        } finally {
+          setLoading(false)
+        }
       
-      setResponse(responses[Math.floor(Math.random() * responses.length)]);
-      setIsSubmitting(false);
-    }, 2000);
+    
+    // Simulate AI response with realistic delay
+    // setTimeout(() => {
+    //   const responses = [
+    //     "Thank you for bringing this to my attention. I've reviewed the infrastructure data and will coordinate with the public works department to address the pothole on Main Street within 48 hours. I've also allocated emergency funds for temporary road safety measures.",
+    //     "I understand your concern about the park lighting. I've already initiated a safety audit and will have LED lighting installed by next week. In the meantime, I've increased patrol frequency in that area.",
+    //     "Your waste management suggestion is excellent. I'm implementing a new smart collection schedule that will optimize routes and reduce missed pickups by 75%. The pilot program starts this Monday.",
+    //     "I've analyzed traffic patterns and agree this intersection needs attention. I'm fast-tracking the installation of smart traffic signals and pedestrian safety features. Construction begins next month."
+    //   ];
+      
+    //   setResponse(responses[Math.floor(Math.random() * responses.length)]);
+    //   setIsSubmitting(false);
+    // }, 2000);
   };
+
+  const handledemo = (e:any)=>{
+    router.replace('dashboard')
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -63,7 +107,7 @@ function App() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-xl">
+            <button onClick={handledemo} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-xl">
               Try Demo Below
               <ChevronRight className="inline ml-2 h-5 w-5" />
             </button>
@@ -156,25 +200,25 @@ function App() {
           </div>
 
           <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
-            <form onSubmit={handleSubmitIssue} className="mb-6">
+            <form onSubmit={send} className="mb-6">
               <div className="mb-4">
                 <label htmlFor="issue" className="block text-lg font-medium text-white mb-3">
                   What issue would you like the AI Mayor to address?
                 </label>
                 <textarea
                   id="issue"
-                  value={issue}
-                  onChange={(e) => setIssue(e.target.value)}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
                   className="w-full h-32 px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"
                   placeholder="e.g., There's a large pothole on Main Street that's causing traffic issues and could damage vehicles..."
                 />
               </div>
               <button
                 type="submit"
-                disabled={!issue.trim() || isSubmitting}
+                disabled={isSubmitting}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white px-6 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center"
               >
-                {isSubmitting ? (
+                {messages.length<0 ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                     AI Mayor is thinking...
@@ -188,7 +232,7 @@ function App() {
               </button>
             </form>
 
-            {response && (
+            {messages && (
               <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-lg rounded-2xl p-6 border border-green-400/30 animate-fade-in">
                 <div className="flex items-start space-x-4">
                   <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-3">
@@ -196,7 +240,25 @@ function App() {
                   </div>
                   <div className="flex-1">
                     <h4 className="text-lg font-semibold text-white mb-2">AI Mayor Response:</h4>
-                    <p className="text-gray-200 leading-relaxed">{response}</p>
+                    <p className="text-gray-200 leading-relaxed">
+                      <div className="h-[50vh] overflow-y-auto space-y-3 pr-2">
+              {messages.map((m, idx) => (
+                <div
+                  key={idx}
+                  className={`rounded-md px-3 py-2 text-sm ${
+                    m.role === "user"
+                      ? "bg-slate-800/80 border border-slate-700"
+                      : "bg-cyan-900/20 border border-cyan-700/30"
+                  }`}
+                >
+                  <span className={m.role === "user" ? "text-slate-300" : "text-cyan-300"}>
+                    {m.role === "user" ? "Citizen: " : "Mayor: "}
+                  </span>
+                  <span className="text-slate-100">{m.content}</span>
+                </div>
+              ))}
+            </div>
+                    </p>
                   </div>
                 </div>
               </div>
