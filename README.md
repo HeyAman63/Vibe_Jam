@@ -64,30 +64,45 @@ npm run dev
 ```
 ### Visit app 👉
 
-### 🤖 Example AI Mayor Interaction
+## 🤖 Example AI Mayor Interaction
 
-## Citizen Query:
-### Mayor, there’s traffic congestion in Sector-5.
+**Citizen Query:**
 
+**Mayor Response:**
 ## Mayor Response:
-# Deploying 20 drone taxis and rerouting Hyperloop from Sector-3 to Sector-5. Congestion reduced.
+** Deploying 20 drone taxis and rerouting Hyperloop from Sector-3 to Sector-5. Congestion reduced.
+
+
+---
 
 ## 🔮 Future Extensions
-## 🌍 3D/AR City Visualization (Three.js / CesiumJS)
-## ☀️ Climate Impact Decisions (Mayor builds solar plants, manages pollution)
-## 🧠 NeuralLink Input (thought-to-text citizen queries)
-## 🪙 Blockchain Resource Credits (citizens trade energy/water credits)
 
-# 🏆 Hackathon Pitch
+- 🌍 **3D/AR City Visualization** (Three.js / CesiumJS)  
+- ☀️ **Climate Impact Decisions** (Mayor builds solar plants, manages pollution)  
+- 🧠 **NeuralLink Input** (thought-to-text citizen queries)  
+- 🪙 **Blockchain Resource Credits** (citizens trade energy/water credits)  
 
-## This project demonstrates how AI governance can manage futuristic cities in 2070, balancing resources, resolving conflicts, and enhancing citizen experience — powered by LangChain, OpenAI, and a sci-fi dashboard UI.
+---
 
-# 👨‍💻 Contributors
+## 🏆 Hackathon Pitch
 
-## Team-Brainwave
-### Aditya Yadav
-### Aman Churasiya
-### Harshit Keserwani
+This project demonstrates how **AI governance** can manage futuristic cities in **2070**, balancing resources, resolving conflicts, and enhancing citizen experience — powered by **LangChain, OpenAI, and a sci-fi dashboard UI**.
+
+---
+
+## 👨‍💻 Contributors
+
+- **Team-Brainwave**
+  - Aditya Yadav  
+  - Aman Churasiya  
+  - Harshit Keserwani  
+
+---
+
+## ⭐ Support
+
+If you like this project, don’t forget to ⭐ **star this repo** on GitHub!
+
 
 # ⭐ Support
 ### If you like this project, don’t forget to ⭐ star this repo on GitHub!
